@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to check if a number is prime
+bool isPrime(int num, int divisor) {
+    if (divisor == 1) {
+        return true;
+    } else {
+        if (num % divisor == 0) {
+            return false;
+        } else {
+            return isPrime(num, divisor - 1);
+        }
+    }
+}
+
+// Function to print prime numbers up to a given limit
+void printPrimes(int n, int current) {
+    if (current > n) {
+        return;
+    } else {
+        if (isPrime(current, current - 1)) {
+            printf("%d ", current);
+        }
+        printPrimes(n, current + 1);
+    }
+}
+
+int main() {
+    int limit;
+    printf("Enter the limit to generate prime numbers: ");
+    scanf("%d", &limit);
+
+    printf("Prime numbers up to %d are: ", limit);
+    printPrimes(limit, 2); // Start from 2, as 1 is not a prime number
+
+    return 0;
+}
