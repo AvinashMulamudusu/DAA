@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define N 4 // Number of cities
+
+// Function to find the minimum of two numbers
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// Function to solve the Traveling Salesman Problem using dynamic programming
+int tsp(int graph[N][N], int mask, int pos, int dp[N][1 << N]) {
+    // If all cities have been visited, return the cost of returning to the starting city
+    if (mask == (1 << N) - 1) {
+        return graph[pos][0];
+    }
+    
+    // If the subproblem has already been solved, return the result from the DP table
+    if (dp[pos][mask] != -1) {
+        return dp[pos][mask];
+    }
+    
+    int ans = INT_MAX;
+    
+    // Try visiting unvisited cities
+    for (int city = 0; city < N; city++) {
+        if ((mask & (1 << city)) == 0) { // If city is not visited
+            int newMask = mask | (1 << city); // Mark city as visited
+            int cost = graph[pos][city] + tsp(graph, newMask, city, dp); // Recur for remaining cities
+            ans = min(ans, cost);
+        }
+    }
+    
+    // Memoize the result
+    return dp[pos][mask] = ans;
+}
+
+int main() {
+    int graph[N][N] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+    
+    // Initialize the DP table with -1
+    int dp[N][1 << N];
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < (1 << N); j++) {
+            dp[i][j] = -1;
+        }
+    }
+    
+    int minCost = tsp(graph, 1, 0, dp); // Start from city 0 (bit 0 is set)
+    
+    printf("Minimum cost for the Traveling Salesman Problem: %d\n", minCost);
+    
+    return 0;
+}
