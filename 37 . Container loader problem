@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_CONTAINERS 100
+
+// Structure to represent a container
+typedef struct {
+    int id;
+    int size;
+} Container;
+
+// Function to sort containers based on size (in non-increasing order)
+void sortContainers(Container containers[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (containers[i].size < containers[j].size) {
+                // Swap containers
+                Container temp = containers[i];
+                containers[i] = containers[j];
+                containers[j] = temp;
+            }
+        }
+    }
+}
+
+// Function to load containers into a larger container
+void loadContainers(Container containers[], int n, int largeContainerSize) {
+    int remainingSpace = largeContainerSize;
+    printf("Loaded containers:\n");
+    for (int i = 0; i < n; i++) {
+        if (containers[i].size <= remainingSpace) {
+            printf("Container %d (size %d) loaded\n", containers[i].id, containers[i].size);
+            remainingSpace -= containers[i].size;
+        }
+    }
+    printf("Remaining space in the large container: %d\n", remainingSpace);
+}
+
+int main() {
+    int n;
+    printf("Enter the number of containers: ");
+    scanf("%d", &n);
+
+    Container containers[MAX_CONTAINERS];
+    printf("Enter the size of each container:\n");
+    for (int i = 0; i < n; i++) {
+        containers[i].id = i + 1;
+        scanf("%d", &containers[i].size);
+    }
+
+    int largeContainerSize;
+    printf("Enter the size of the large container: ");
+    scanf("%d", &largeContainerSize);
+
+    // Sort containers based on size in non-increasing order
+    sortContainers(containers, n);
+
+    // Load containers into the large container
+    loadContainers(containers, n, largeContainerSize);
+
+    return 0;
+}
