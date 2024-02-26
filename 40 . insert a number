@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure of a node
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to insert a number into a list
+void insert(struct Node** head, int newData) {
+    // Allocate memory for new node
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Assign data to the new node
+    newNode->data = newData;
+    newNode->next = NULL;
+
+    // If the list is empty, make the new node the head
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    // Traverse the list to find the last node
+    struct Node* last = *head;
+    while (last->next != NULL) {
+        last = last->next;
+    }
+
+    // Insert the new node at the end of the list
+    last->next = newNode;
+}
+
+// Function to print the list
+void printList(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    // Initialize the head pointer to NULL (empty list)
+    struct Node* head = NULL;
+
+    // Insert numbers into the list
+    insert(&head, 10);
+    insert(&head, 20);
+    insert(&head, 30);
+
+    // Print the list
+    printf("Original list: ");
+    printList(head);
+
+    // Insert a new number into the list
+    int newData = 25;
+    insert(&head, newData);
+
+    // Print the updated list
+    printf("List after inserting %d: ", newData);
+    printList(head);
+
+    return 0;
+}
