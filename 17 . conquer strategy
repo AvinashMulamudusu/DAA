@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+// Function to find the maximum and minimum values using divide and conquer
+void findMaxMin(int arr[], int left, int right, int *max, int *min) {
+    if (left == right) {
+        *max = *min = arr[left]; // Base case: only one element
+    } else if (right - left == 1) {
+        // Base case: two elements
+        if (arr[left] < arr[right]) {
+            *min = arr[left];
+            *max = arr[right];
+        } else {
+            *min = arr[right];
+            *max = arr[left];
+        }
+    } else {
+        int mid = (left + right) / 2;
+        int max1, min1, max2, min2;
+        
+        // Divide the array into two halves
+        findMaxMin(arr, left, mid, &max1, &min1);
+        findMaxMin(arr, mid + 1, right, &max2, &min2);
+        
+        // Combine the results
+        if (max1 > max2)
+            *max = max1;
+        else
+            *max = max2;
+        
+        if (min1 < min2)
+            *min = min1;
+        else
+            *min = min2;
+    }
+}
+
+int main() {
+    int arr[] = {1000, 11, 445, 1, 330, 3000};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int max, min;
+
+    findMaxMin(arr, 0, n - 1, &max, &min);
+
+    printf("Maximum element in the array: %d\n", max);
+    printf("Minimum element in the array: %d\n", min);
+
+    return 0;
+}
