@@ -1,0 +1,36 @@
+#include <stdio.h>
+int findLargestElement(int arr[], int size) {
+    if (size == 0) {
+        printf("Error: The array is empty.\n");
+        return -1;  
+    }
+	int largest = arr[0];
+	for (int i = 1; i < size; i++) {
+        if (arr[i] > largest) {
+            largest = arr[i];
+        }
+    }
+
+    return largest;
+}
+int main() {
+    int size;
+	printf("Enter the size of the array: ");
+    scanf("%d", &size);
+	if (size <= 0) {
+        printf("Error: Please enter a positive size.\n");
+        return 1;  
+    }
+
+    int arr[size];
+	printf("Enter %d elements of the array:\n", size);
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &arr[i]);
+    }
+	int largestElement = findLargestElement(arr, size);
+    if (largestElement != -1) {
+        printf("The largest element in the array is: %d\n", largestElement);
+    }
+
+    return 0;
+}
