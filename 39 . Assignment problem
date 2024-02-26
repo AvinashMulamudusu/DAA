@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+
+#define N 4 
+
+int bestCost = INT_MAX; 
+
+void branchAndBoundUtil(int costMatrix[N][N], int assigned[], bool assignedJob[], int worker, int totalCost);
+
+
+void printOptimalAssignment(int assigned[]) {
+    printf("Minimum cost assignment is:\n");
+    for (int i = 0; i < N; i++)
+        printf("Worker %d -> Job %d\n", i, assigned[i]);
+    printf("Total cost: %d\n", bestCost);
+}
+
+
+void branchAndBound(int costMatrix[N][N]) {
+    int assigned[N];
+    bool assignedJob[N] = {false};
+
+    
+    assigned[0] = 0;
+    assignedJob[0] = true;
+
+    
+    int totalCost = costMatrix[0][0];
+
+    
+    branchAndBoundUtil(costMatrix, assigned, assignedJob, 1, totalCost);
+
+    if (bestCost == INT_MAX) {
+        printf("No feasible solution exists\n");
+    } else {
+        printOptimalAssignment(assigned);
+    }
+}
+
+
+void branchAndBoundUtil(int costMatrix[N][N], int assigned[], bool assignedJob[], int worker, int totalCost) {
+    
+    if (worker == N) {
+        if (totalCost < bestCost) {
+            bestCost = totalCost;
+        }
+        return;
+    }
+
+   
+    for (int j = 0; j < N; j++) {
+        if (!assignedJob[j]) {
+           
+            int currentCost = totalCost + costMatrix[worker][j];
+
+            
+            if (currentCost < bestCost) {
+                assigned[worker] = j;
+                assignedJob[j] = true;
+                branchAndBoundUtil(costMatrix, assigned, assignedJob, worker + 1, currentCost);
+                assigned[worker] = -1;
+                assignedJob[j] = false;
+            }
+        }
+    }
+}
+
+int main() {
+    
+    int costMatrix[N][N] = {
+        {9, 2, 7, 8},
+        {6, 4, 3, 7},
+        {5, 8, 1, 8},
+        {7, 6, 9, 4}
+    };
+
+    branchAndBound(costMatrix);
+
+    return 0;
+}
