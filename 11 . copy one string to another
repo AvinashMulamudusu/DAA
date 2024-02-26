@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+
+void copyString(char *source, char *destination) {
+   
+    if (*source != '\0') {
+        *destination = *source;
+        copyString(source + 1, destination + 1);
+    }
+    
+    else {
+        *destination = '\0';
+    }
+}
+
+int main() {
+    char source[100], destination[100];
+
+    printf("Enter a string to copy: ");
+    fgets(source, 100, stdin);
+
+   
+    if (source[strlen(source) - 1] == '\n')
+        source[strlen(source) - 1] = '\0';
+
+    
+    copyString(source, destination);
+
+    printf("Original string: %s\n", source);
+    printf("Copied string: %s\n", destination);
+
+    return 0;
+}
