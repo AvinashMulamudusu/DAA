@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure to represent an item
+struct Item {
+    int value;
+    int weight;
+};
+
+// Function to compare items based on their value per unit weight
+int compareItems(const void *a, const void *b) {
+    double ratio1 = (double)(((struct Item *)a)->value) / (((struct Item *)a)->weight);
+    double ratio2 = (double)(((struct Item *)b)->value) / (((struct Item *)b)->weight);
+    if (ratio1 < ratio2) return 1;
+    if (ratio1 > ratio2) return -1;
+    return 0;
+}
+
+// Function to solve the fractional knapsack problem using greedy technique
+double fractionalKnapsack(int W, struct Item arr[], int n) {
+    // Sort items based on their value per unit weight in non-increasing order
+    qsort(arr, n, sizeof(struct Item), compareItems);
+
+    int currentWeight = 0;  // Current weight in knapsack
+    double finalValue = 0.0; // Final value of items in knapsack
+
+    // Loop through all the items
+    for (int i = 0; i < n; i++) {
+        // If adding the entire item won't overflow the knapsack
+        if (currentWeight + arr[i].weight <= W) {
+            currentWeight += arr[i].weight;
+            finalValue += arr[i].value;
+        } else {
+            // Otherwise, add a fraction of the item
+            int remainingWeight = W - currentWeight;
+            finalValue += arr[i].value * ((double)remainingWeight / arr[i].weight);
+            break; // Knapsack is full, no need to continue
+        }
+    }
+
+    return finalValue;
+}
+
+int main() {
+    int W, n; // W: Capacity of the knapsack, n: Number of items
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%d", &W);
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    struct Item arr[n]; // Array to store items
+
+    // Input items (value and weight)
+    for (int i = 0; i < n; i++) {
+        printf("Enter value and weight for item %d: ", i + 1);
+        scanf("%d %d", &arr[i].value, &arr[i].weight);
+    }
+
+    // Calculate the maximum value that can be obtained
+    double maxValue = fractionalKnapsack(W, arr, n);
+    printf("The maximum value that can be obtained is: %.2lf\n", maxValue);
+
+    return 0;
+}
